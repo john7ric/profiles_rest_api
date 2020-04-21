@@ -30,10 +30,10 @@ class UserAPIView(APIView):
             
             name = serializer.validated_data.get('name')
             age = serializer.validated_data.get('age')
-            message_string = 'Hello ' + name + " you are " + str(age) + " old"
+            message_string = 'Hello ' + name + " you are " + str(age) + " years old"
             return Response({'message' : message_string})
         else:
-            return Response({'errors' : serializer.errors, 'status' : status.HTTP_400_BAD_REQUEST })
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST )
                 
         
                            
