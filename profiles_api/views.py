@@ -10,7 +10,6 @@ class UserAPIView(APIView):
     
     serializer_class = serializers.UserSearializer
     
-    
     def get(self, request, format=None):
         """ method for handling get request to this class """
 
@@ -24,14 +23,14 @@ class UserAPIView(APIView):
     def post(self, request):
         """ method handling the post requests to this view """
         
-        serializer = sel.serializer_class(request.data)
+        serializer = self.serializer_class(data=request.data)
         
         if serializer.is_valid():
             #message_string = f'Hello {serializer.validated_data.get('name')} you are {serializer.validated_data.get('age')} years old'
             
             name = serializer.validated_data.get('name')
             age = serializer.validated_data.get('age')
-            message_string = 'Hello ' + name + " you are " + age + " old"
+            message_string = 'Hello ' + name + " you are " + str(age) + " old"
             return Response({'message' : message_string})
         else:
             return Response({'errors' : serializer.errors, 'status' : status.HTTP_400_BAD_REQUEST })
