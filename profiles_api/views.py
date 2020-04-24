@@ -6,12 +6,12 @@ from rest_framework import authentication
 from rest_framework import filters
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
+from rest_framework.permissions import IsAuthenticated
 
 
 from profiles_api import serializers
 from profiles_api import models
 from profiles_api import permissions
-
 
 
 
@@ -44,7 +44,8 @@ class UserAPIView(APIView):
             # serializer.validated_data.get('age')} years old'
             name = serializer.validated_data.get('name')
             age = serializer.validated_data.get('age')
-            message_string = 'Hello ' + name + " you are " + str(age) + " years old"
+            message_string = 'Hello ' + name + \
+                " you are " + str(age) + " years old"
             return Response({'message': message_string})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -134,13 +135,13 @@ class LoginApiView(ObtainAuthToken):
 
 class ProfileFeedItemViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProfileFeedSerializer
-    #queryset = models.ProfileFeedItem.objects.all()
     queryset = models.ProfileFeedItem.objects.all()
     authentication_classes = (authentication.TokenAuthentication,)
-    #filter_backends = (filters.SearchFilter,)
-    #search_fields = ('status_text',)
+    permission_classes = (
+        permissions.AllowEditOwnStatus,
+        IsAuthenticated,
+
+    )
 
     def perform_create(self, serializer):
-        serializer.save(user_profile= self.request.user)
-        
-    
+        serializer.save(user_profile=self.request.user)
