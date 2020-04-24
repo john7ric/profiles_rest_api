@@ -1,3 +1,3 @@
 # PROFILES REST API
 
-Django rest course project
+Django rest test project
